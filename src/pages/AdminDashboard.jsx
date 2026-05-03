@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Package, Tag, ShoppingBag, Star, Layout, Image as ImageIcon, Link as LinkIcon, Settings, Save, LogOut, Globe, Menu, X } from 'lucide-react';
+const API_URL = 'https://backend-9wpf.onrender.com/api';
 
-const API_URL = 'http://localhost:5000/api';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -30,8 +30,8 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
 
   // Forms State
-  const [productForm, setProductForm] = useState({ 
-    name: '', price: '', category: 'Men', inStock: true, isFeatured: false, 
+  const [productForm, setProductForm] = useState({
+    name: '', price: '', category: 'Men', inStock: true, isFeatured: false,
     description: '', images: null, quantity: '', deliveryDays: 3, appliedOffer: '',
     sizes: [],
     bulkDiscount: { minQty: '', discountPct: '' }
@@ -102,7 +102,7 @@ const AdminDashboard = () => {
       Object.keys(productForm).forEach(k => {
         // Skip null/undefined values (especially images when no file is selected)
         if (productForm[k] === null || productForm[k] === undefined) return;
-        
+
         if (k === 'sizes' || k === 'bulkDiscount') {
           data.append(k, JSON.stringify(productForm[k]));
         } else if (k === 'images') {
@@ -132,8 +132,8 @@ const AdminDashboard = () => {
 
       await axios.post(`${API_URL}/admin/products`, data, authHeaders);
       showToast('Product saved!');
-      setProductForm({ 
-        name: '', price: '', category: 'Men', inStock: true, isFeatured: false, 
+      setProductForm({
+        name: '', price: '', category: 'Men', inStock: true, isFeatured: false,
         description: '', images: null, video: null, quantity: '', deliveryDays: 3, appliedOffer: '',
         sizes: [],
         bulkDiscount: { minQty: '', discountPct: '' }
@@ -156,10 +156,10 @@ const AdminDashboard = () => {
   const updateSizeRow = (index, field, value) => {
     const updatedSizes = [...productForm.sizes];
     updatedSizes[index][field] = value;
-    
+
     // Calculate total quantity from sizes
     const totalQty = updatedSizes.reduce((acc, s) => acc + (parseInt(s.quantity) || 0), 0);
-    
+
     setProductForm({
       ...productForm,
       sizes: updatedSizes,
@@ -255,7 +255,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [activeTab]);
-  
+
   // Sidebar Content (Extracted for reuse)
   const SidebarContent = () => (
     <>
@@ -395,11 +395,11 @@ const AdminDashboard = () => {
                     <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-xl border border-dashed border-slate-300">
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-bold text-slate-500">Buy</span>
-                        <input type="number" placeholder="2" value={productForm.bulkDiscount.minQty} onChange={e => setProductForm({...productForm, bulkDiscount: {...productForm.bulkDiscount, minQty: e.target.value}})} className="w-16 border p-1 rounded text-center" />
+                        <input type="number" placeholder="2" value={productForm.bulkDiscount.minQty} onChange={e => setProductForm({ ...productForm, bulkDiscount: { ...productForm.bulkDiscount, minQty: e.target.value } })} className="w-16 border p-1 rounded text-center" />
                         <span className="text-xs font-bold text-slate-500">or more → get</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <input type="number" placeholder="5" value={productForm.bulkDiscount.discountPct} onChange={e => setProductForm({...productForm, bulkDiscount: {...productForm.bulkDiscount, discountPct: e.target.value}})} className="w-16 border p-1 rounded text-center" />
+                        <input type="number" placeholder="5" value={productForm.bulkDiscount.discountPct} onChange={e => setProductForm({ ...productForm, bulkDiscount: { ...productForm.bulkDiscount, discountPct: e.target.value } })} className="w-16 border p-1 rounded text-center" />
                         <span className="text-xs font-bold text-slate-500">% off</span>
                       </div>
                     </div>
@@ -526,8 +526,8 @@ const AdminDashboard = () => {
                         <td className="p-4">
                           <span className="font-bold">{o.productName}</span><br />
                           <div className="flex gap-2 mt-1">
-                             <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded-full font-bold">Size: {o.selectedSize || 'N/A'}</span>
-                             <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded-full font-bold">Qty: {o.quantity || 1}</span>
+                            <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded-full font-bold">Size: {o.selectedSize || 'N/A'}</span>
+                            <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded-full font-bold">Qty: {o.quantity || 1}</span>
                           </div>
                           <span className="text-sm font-black text-slate-900 mt-1 block">₹{o.productPrice}</span>
                         </td>
@@ -537,28 +537,28 @@ const AdminDashboard = () => {
                         </td>
                         <td className="p-4 text-xs">
                           <span className="uppercase font-bold">{o.paymentMethod}</span><br />
-                        {o.paymentMethod === 'upi' && o.paymentScreenshotUrl ? (
-                          <a href={o.paymentScreenshotUrl} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">View Proof</a>
-                        ) : (
-                          <span className="text-green-500">Paid Online</span>
-                        )}
-                      </td>
-                      <td className="p-4">
-                        <select
-                          value={o.orderStatus}
-                          onChange={(e) => updateOrderStatus(o._id, e.target.value)}
-                          className="border p-1 rounded text-xs"
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="confirmed">Confirmed</option>
-                          <option value="shipped">Shipped</option>
-                          <option value="delivered">Delivered</option>
-                        </select>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                          {o.paymentMethod === 'upi' && o.paymentScreenshotUrl ? (
+                            <a href={o.paymentScreenshotUrl} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">View Proof</a>
+                          ) : (
+                            <span className="text-green-500">Paid Online</span>
+                          )}
+                        </td>
+                        <td className="p-4">
+                          <select
+                            value={o.orderStatus}
+                            onChange={(e) => updateOrderStatus(o._id, e.target.value)}
+                            className="border p-1 rounded text-xs"
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}

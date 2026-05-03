@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Lock } from 'lucide-react';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://backend-9wpf.onrender.com/api';
+
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
