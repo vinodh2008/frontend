@@ -10,7 +10,7 @@ import NotFound from './pages/NotFound';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://backend-9wpf.onrender.com/api';
 
 // Scroll to top component
 const ScrollToTop = () => {
