@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, MapPin, Clock, ArrowRight, Star, ShoppingBag, Zap, Eye, Play } from 'lucide-react';
 import ProductQuickViewModal from '../components/ProductQuickViewModal';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://backend-9wpf.onrender.com/api';
+
 
 // --- FLIP CARD COMPONENT ---
 const FlipCard = ({ product, getOfferForProduct, onQuickView }) => {
@@ -17,7 +18,7 @@ const FlipCard = ({ product, getOfferForProduct, onQuickView }) => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (videoRef.current) {
-          if (entry.isIntersecting) videoRef.current.play().catch(() => {});
+          if (entry.isIntersecting) videoRef.current.play().catch(() => { });
           else videoRef.current.pause();
         }
       },
@@ -35,13 +36,13 @@ const FlipCard = ({ product, getOfferForProduct, onQuickView }) => {
   const finalPrice = product.finalPrice || product.price;
 
   return (
-    <div 
+    <div
       className="perspective-1000 w-full h-[420px] group"
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
       onClick={handleTouch}
     >
-      <motion.div 
+      <motion.div
         className="relative w-full h-full transition-all duration-700 preserve-3d"
         animate={{ rotateY: isFlipped ? 180 : 0 }}
       >
@@ -59,9 +60,9 @@ const FlipCard = ({ product, getOfferForProduct, onQuickView }) => {
           ) : (
             <img src={product.imageUrl || product.thumbnailUrl} alt={product.name} className="w-full h-full object-cover" />
           )}
-          
+
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-          
+
           {/* Badges */}
           <div className="absolute top-4 left-4 flex flex-col gap-2">
             {activeOffer && (
@@ -93,7 +94,7 @@ const FlipCard = ({ product, getOfferForProduct, onQuickView }) => {
           <div className="flex-grow">
             <span className="text-secondary font-black text-[10px] uppercase tracking-widest block mb-2">{product.category}</span>
             <h3 className="text-white font-black text-2xl mb-4 line-clamp-2">{product.name}</h3>
-            
+
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <span className="text-2xl font-black text-white">₹{finalPrice}</span>
@@ -112,7 +113,7 @@ const FlipCard = ({ product, getOfferForProduct, onQuickView }) => {
                   </div>
                 </div>
               )}
-              
+
               <div className="flex items-center gap-2">
                 <div className={`w-2 h-2 rounded-full ${product.quantity > 0 ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
                 <span className="text-xs font-bold text-slate-300">
@@ -123,13 +124,13 @@ const FlipCard = ({ product, getOfferForProduct, onQuickView }) => {
           </div>
 
           <div className="flex flex-col gap-3 mt-auto">
-            <button 
+            <button
               onClick={(e) => { e.stopPropagation(); onQuickView(product); }}
               className="w-full bg-white text-slate-900 py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-secondary transition-colors"
             >
               <Eye size={18} /> Quick View
             </button>
-            <Link 
+            <Link
               to={`/product/${product._id}`}
               onClick={(e) => e.stopPropagation()}
               className="w-full bg-secondary text-primary py-3 rounded-2xl font-black text-sm flex items-center justify-center gap-2 hover:bg-white transition-colors"
@@ -160,7 +161,7 @@ const Homepage = ({ settings }) => {
       try {
         const prodRes = await axios.get(`${API_URL}/products`);
         setProducts(prodRes.data);
-        
+
         const offerRes = await axios.get(`${API_URL}/offers/active`);
         setOffers(offerRes.data);
 
@@ -195,7 +196,7 @@ const Homepage = ({ settings }) => {
   // Fresh Arrivals Logic
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  
+
   let freshArrivals = products.filter(p => p.isFeatured || new Date(p.createdAt) > sevenDaysAgo);
   if (freshArrivals.length === 0) {
     // If no recent or featured, take newest 6
@@ -218,12 +219,12 @@ const Homepage = ({ settings }) => {
 
   return (
     <div className="bg-slate-50 min-h-screen">
-      
+
       {quickViewProduct && (
-        <ProductQuickViewModal 
-          product={quickViewProduct} 
-          settings={settings} 
-          onClose={() => setQuickViewProduct(null)} 
+        <ProductQuickViewModal
+          product={quickViewProduct}
+          settings={settings}
+          onClose={() => setQuickViewProduct(null)}
         />
       )}
 
@@ -248,14 +249,14 @@ const Homepage = ({ settings }) => {
         </AnimatePresence>
 
         <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-4 max-w-5xl mx-auto">
-          <motion.h1 
+          <motion.h1
             key={`title-${heroIndex}`}
             initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}
             className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 tracking-tighter leading-tight"
           >
             {slides[heroIndex].title}
           </motion.h1>
-          <motion.p 
+          <motion.p
             key={`subtitle-${heroIndex}`}
             initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}
             className="text-lg md:text-xl text-slate-200 mb-8 max-w-2xl"
@@ -266,7 +267,7 @@ const Homepage = ({ settings }) => {
             key={`btn-${heroIndex}`}
             initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }}
           >
-            <button 
+            <button
               onClick={() => {
                 document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
               }}
@@ -296,8 +297,8 @@ const Homepage = ({ settings }) => {
         <div className="bg-white py-6 border-b border-slate-200 overflow-hidden relative">
           <div className="flex animate-[marquee_20s_linear_infinite] whitespace-nowrap gap-6 px-4">
             {[...offers, ...offers, ...offers].map((offer, idx) => (
-              <div 
-                key={`${offer._id}-${idx}`} 
+              <div
+                key={`${offer._id}-${idx}`}
                 className="inline-flex items-center gap-4 px-6 py-3 rounded-2xl shrink-0 shadow-sm border border-black/5"
                 style={{ backgroundColor: offer.bannerColor || '#F59E0B', color: '#fff' }}
               >
@@ -322,8 +323,8 @@ const Homepage = ({ settings }) => {
           {['Men', 'Footwear', 'Accessories'].map((cat) => {
             const bgImage = settings?.categoryImages?.[cat.toLowerCase()] || 'https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=800&q=80';
             return (
-              <Link 
-                key={cat} 
+              <Link
+                key={cat}
                 to={`/?category=${cat.toLowerCase()}`}
                 className="group relative h-96 rounded-3xl overflow-hidden shadow-lg block"
               >
@@ -364,10 +365,10 @@ const Homepage = ({ settings }) => {
           <div className="flex gap-8 overflow-x-auto px-4 container mx-auto pb-12 hide-scrollbar scroll-smooth snap-x">
             {freshArrivals.map(product => (
               <div key={product._id} className="min-w-[320px] w-[320px] shrink-0 snap-start">
-                <FlipCard 
-                  product={product} 
-                  getOfferForProduct={getOfferForProduct} 
-                  onQuickView={setQuickViewProduct} 
+                <FlipCard
+                  product={product}
+                  getOfferForProduct={getOfferForProduct}
+                  onQuickView={setQuickViewProduct}
                 />
               </div>
             ))}
@@ -381,17 +382,16 @@ const Homepage = ({ settings }) => {
           <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-8">
             <span className="text-secondary">OUR</span> <span className="text-slate-900">COLLECTION</span>
           </h2>
-          
+
           <div className="flex flex-wrap justify-center gap-4">
             {['All', 'Men', 'Footwear', 'Accessories'].map(tab => (
-              <button 
+              <button
                 key={tab}
                 onClick={() => setSearchParams(tab === 'All' ? {} : { category: tab.toLowerCase() })}
-                className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${
-                  (categoryFilter === tab.toLowerCase() || (tab === 'All' && categoryFilter === 'all'))
-                  ? 'bg-slate-900 text-white shadow-md' 
+                className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all ${(categoryFilter === tab.toLowerCase() || (tab === 'All' && categoryFilter === 'all'))
+                  ? 'bg-slate-900 text-white shadow-md'
                   : 'bg-white text-slate-500 border border-slate-200 hover:border-slate-400'
-                }`}
+                  }`}
               >
                 {tab}
               </button>
@@ -402,10 +402,10 @@ const Homepage = ({ settings }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {gridProducts.length > 0 ? gridProducts.map(product => (
             <div key={product._id} className="flex flex-col">
-              <FlipCard 
-                product={product} 
-                getOfferForProduct={getOfferForProduct} 
-                onQuickView={setQuickViewProduct} 
+              <FlipCard
+                product={product}
+                getOfferForProduct={getOfferForProduct}
+                onQuickView={setQuickViewProduct}
               />
             </div>
           )) : (
@@ -470,7 +470,7 @@ const Homepage = ({ settings }) => {
                 <div>
                   <h3 className="text-2xl font-black text-slate-900 mb-2">Kakinada Main Branch</h3>
                   <p className="text-slate-500 font-medium leading-relaxed mb-6">
-                    53, Road No.1, Maruti Nagar,<br/>Ramanayyapeta, Kakinada - 533005
+                    53, Road No.1, Maruti Nagar,<br />Ramanayyapeta, Kakinada - 533005
                   </p>
                   <a href="tel:9993822286" className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-900 px-6 py-3 rounded-xl font-bold hover:border-secondary transition-all">
                     <Phone size={18} /> 9993822286
@@ -488,7 +488,7 @@ const Homepage = ({ settings }) => {
                 <div>
                   <h3 className="text-2xl font-black text-slate-900 mb-2">Tuni Showroom</h3>
                   <p className="text-slate-500 font-medium leading-relaxed mb-6">
-                    Main Road, Near Cinema Hall,<br/>Tuni, Andhra Pradesh - 533401
+                    Main Road, Near Cinema Hall,<br />Tuni, Andhra Pradesh - 533401
                   </p>
                   <a href="tel:9281425686" className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-900 px-6 py-3 rounded-xl font-bold hover:border-secondary transition-all">
                     <Phone size={18} /> 9281425686
